@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path
-from guests import views  
+from wedding import views  # Replace 'your_app_name' with your actual app name (e.g., 'rsvp', 'wedding')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('rsvp/', views.rsvp_page, name='rsvp'),
+    
+    # This empty '' means: "Load this view on the absolute front page"
+    path('', views.home, name='home'), 
 ]
