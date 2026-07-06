@@ -78,10 +78,19 @@ WSGI_APPLICATION = 'wedding_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-        'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-        )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'wedding_db',
+        'USER': 'postgres',
+        'PASSWORD': 'baron252',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# This magic line overrides 'default' ONLY if it finds a cloud database URL on Render
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 # Password validation
