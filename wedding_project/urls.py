@@ -14,5 +14,5 @@ urlpatterns = [
     
     # 2. Your RSVP Form Submission Endpoint
     # When someone clicks "Submit" on your one-page form, it sends the data here
-    path('rsvp/submit/', guest_views.rsvp_submit, name='rsvp_submit'),
+    path('rsvp/submit/', guest_views.rsvp_page, name='rsvp_submit'),
 ]
