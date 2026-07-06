@@ -1,0 +1,757 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding of Mom & Dad</title>
+    <!-- Bolder font weights loaded -->
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* GLOBAL STYLES & RESPONSIVENESS */
+        *, *::before, *::after { box-sizing: border-box; }
+        body { 
+            font-family: 'Playfair Display', serif; 
+            margin: 0; padding: 0; color: #222; 
+            background-color: #fbfbfb; 
+            overflow-x: hidden;
+        }
+
+        .floating-message {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background-color: #333; color: white; padding: 15px 25px;
+            border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* BOLDER ROYAL BLUE HEADINGS */
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700; 
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #002366; 
+        }
+        
+        /* ORNAMENTAL HEADING DIVIDER (Lines extended natively in SVG) */
+        .ornament-divider {
+            width: 340px; 
+            height: auto;
+            max-height: 30px;
+            display: block;
+            margin: 0 auto 40px auto;
+        }
+
+        /* LARGE FLORAL DIVIDER */
+        .floral-banner {
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            margin: 60px auto;
+            opacity: 0.85; 
+        }
+
+        /* 1. HERO SECTION */
+        #hero { 
+            height: 100vh; 
+            min-height: 600px;
+            background-image: url('{% static "guests/parents.jpg" %}');
+            background-size: cover; background-position: center; background-attachment: fixed; 
+            display: flex; justify-content: center; align-items: center; text-align: center;
+            background-color: rgba(0, 0, 0, 0.65); background-blend-mode: overlay;
+            padding: 20px;
+        }
+
+        .hero-content-box {
+            border: 2px solid #e0e0e0; 
+            padding: 60px 40px; 
+            width: 100%;
+            max-width: 900px; 
+            background: rgba(0, 0, 0, 0.15); 
+            backdrop-filter: blur(2px); 
+        }
+
+        .hero-content-box h1 { 
+            font-family: 'Alex Brush', cursive; 
+            font-size: clamp(4.5rem, 8vw, 7.5rem); 
+            color: #e0e0e0; 
+            font-weight: normal;
+            margin: 0 0 15px 0; 
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+            line-height: 1.1;
+        }
+        
+        .hero-content-box .subtitle { 
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.9rem, 2vw, 1.2rem); 
+            font-weight: 600; 
+            color: #e0e0e0; 
+            letter-spacing: 4px; 
+            text-transform: uppercase;
+            margin: 0; 
+        }
+
+        .hero-content-box .divider {
+            border: 0; border-top: 1px solid #e0e0e0;
+            width: 80%; margin: 30px auto;
+        }
+
+        .hero-content-box .date {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.85rem, 2vw, 1.1rem); 
+            font-weight: 600; 
+            color: #e0e0e0; 
+            letter-spacing: 2px; 
+            text-transform: uppercase;
+            margin: 0; 
+        }
+
+        .content-wrapper { 
+            padding: 80px 20px; 
+            text-align: center; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 2. GALLERY SECTION */
+        #gallery { margin-bottom: 60px; }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            width: 100%;
+            height: 300px;
+            background-color: #ddd; 
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .grid-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        /* LIGHTBOX / IMAGE VIEWER */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-overlay img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 5px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 2.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            line-height: 1;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(0,0,0,0.4);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 2.5rem;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(0,0,0,0.4);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox-prev { left: 15px; }
+        .lightbox-next { right: 15px; }
+
+        @media (max-width: 600px) {
+            .lightbox-close { top: 10px; right: 10px; width: 38px; height: 38px; font-size: 2rem; }
+            .lightbox-nav { width: 40px; height: 40px; font-size: 2rem; }
+        }
+
+        /* 3. TIMELINE SECTION */
+        #timeline { margin-bottom: 60px; padding: 40px 0; border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; }
+        .timeline-container {
+            display: flex; justify-content: center; flex-wrap: wrap; 
+            gap: 40px; margin-top: 30px;
+        }
+        .timeline-event {
+            display: flex; flex-direction: column; align-items: center; min-width: 150px;
+        }
+        .timeline-icon {
+            font-size: 2rem;
+            width: 70px; height: 70px;
+            border: 2px solid #C0C0C0; 
+            color: #002366; 
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 15px;
+            background-color: #fff;
+        }
+        .timeline-time { 
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            margin-bottom: 5px; 
+            color: #111;
+        }
+        .timeline-title { 
+            font-weight: 600; 
+            font-size: 1rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: #444; 
+        }
+
+        /* 3.5 OUR STORY SECTION */
+        #our-story {
+            background-color: #002366; 
+            color: #FFFFFF;
+            padding: 140px 60px;
+            max-width: 1300px;
+            margin: 60px auto 60px auto;
+            box-sizing: border-box;
+            
+            /* Inner Border implementation */
+            outline: 1px solid #FFFFFF;
+            outline-offset: -20px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2); 
+        }
+
+        .our-story-inner {
+            max-width: 1150px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 70px;
+        }
+
+        .our-story-image {
+            flex: 1 1 45%;
+            max-width: 480px;
+        }
+
+        .our-story-image img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #FFFFFF; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .our-story-image img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+        }
+
+        .our-story-content {
+            flex: 1 1 55%;
+            text-align: left;
+        }
+
+        .our-story-content h2 {
+            color: #FFFFFF;
+            text-align: left;
+        }
+
+        .our-story-content .ornament-divider {
+            margin: 0 0 25px 0;
+        }
+
+        .our-story-content p {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #E8E8E8;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            #our-story {
+                padding: 60px 20px;
+                margin: 0 15px 60px 15px;
+                max-width: none;
+                
+                /* Tighter Inner Border for Mobile */
+                outline: 1px solid #FFFFFF;
+                outline-offset: -10px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            }
+            .our-story-inner {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .our-story-image {
+                max-width: 100%;
+            }
+            .our-story-image img {
+                height: 380px;
+            }
+            .our-story-content {
+                text-align: center;
+            }
+            .our-story-content h2 {
+                text-align: center;
+            }
+            .our-story-content .ornament-divider {
+                margin: 0 auto 25px auto;
+            }
+        }
+
+        /* 4. DRESS CODE SECTION */
+        #dress-code { 
+            background-color: #002366; 
+            color: #FFFFFF; 
+            padding: 80px 20px;
+            text-align: center;
+            margin: 0 0 60px 0;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+
+        #dress-code h2 {
+            color: #FFFFFF; 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .dress-code-text { 
+            font-size: 1.5rem; 
+            font-style: italic; 
+            font-weight: 600; 
+            margin-bottom: 15px; 
+            color: #C0C0C0; 
+        }
+        
+        .dress-code-sub { 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400; 
+            color: #FFFFFF; 
+            font-size: 1rem; 
+            margin-bottom: 40px; 
+        }
+
+        .color-palette {
+            display: flex; justify-content: center; gap: 20px;
+        }
+
+        .color-swatch {
+            width: 50px; height: 50px; border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #FFFFFF;
+        }
+        .color-dark-blue { background-color: #001133; }
+        .color-royal-blue { background-color: #002366; }
+        .color-silver { background-color: #C0C0C0; }
+        .color-light-silver { background-color: #E8E8E8; }
+
+        /* 5. VENUE SECTION */
+        #venue { margin-bottom: 50px; }
+        .map-container {
+            max-width: 800px; margin: 0 auto; 
+            border-radius: 15px; overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .venue-block {
+            margin-bottom: 60px;
+        }
+        .venue-block:last-child {
+            margin-bottom: 0;
+        }
+        
+        .venue-photo {
+            max-width: 800px;
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            margin: 0 auto 25px auto;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .venue-photo:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .venue-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #111;
+        }
+
+        /* 6. CONTACT SECTION */
+        #contact {
+            background-color: #002366; 
+            color: #FFFFFF; 
+            padding: 80px 20px;
+            text-align: center;
+            margin: 0; /* Removed bottom margin since it extends to edge */
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+        #contact h2 {
+            color: #FFFFFF; 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .contact-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #C0C0C0; /* Adjusted for dark background */
+            margin-bottom: 15px;
+        }
+        .contact-number {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #FFFFFF; /* Adjusted for dark background */
+        }
+
+        /* MOBILE FIXES */
+        @media (max-width: 768px) {
+            .hero-content-box { padding: 40px 20px; border-width: 1px; }
+            .timeline-container { flex-direction: column; gap: 30px; }
+            .floral-accent { width: 80px; opacity: 0.2; } 
+            .floral-left { left: -10px; }
+            .floral-right { right: -10px; }
+            .floral-banner { width: 90%; margin: 40px auto; }
+        }
+    </style>
+</head>
+<body>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="floating-message" id="msg">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- HERO SECTION -->
+    <section id="hero">
+        <div class="hero-content-box">
+            <h1>Jonathan & Regina</h1>
+            <p class="subtitle">We are getting married .... again!</p>
+            <hr class="divider">
+            <p class="date">Saturday, September 12th, 2026 | 2 PM</p>
+        </div>
+    </section>
+
+    <!-- OUR STORY SECTION -->
+    <section id="our-story">
+        <div class="our-story-inner">
+            <div class="our-story-image">
+                <img src="{% static 'guests/8.jpg' %}" alt="Jonathan and Regina" onclick="openSingleImageLightbox(this)">
+            </div>
+            <div class="our-story-content">
+                <h2>Our Story</h2>
+                <!-- Updated Elongated SVG Divider -->
+                <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                    <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
+                    <path d="M 150,15 Q 145,5 150,0 Q 155,5 150,15 Z" fill="#C0C0C0"/>
+                    <path d="M 150,15 Q 145,25 150,30 Q 155,25 150,15 Z" fill="#C0C0C0"/>
+                    <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
+                    <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                </svg>
+                <p>Add your love story here — how you first met, the moments that brought you together, and the journey that led to this day.</p>
+                <p>You can add another paragraph here about your engagement, favorite memories, or anything else you'd like your guests to know.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-wrapper">
+        
+        <!-- GALLERY SECTION -->
+        <section id="gallery">
+            <h2>Gallery</h2>
+            <!-- Updated Elongated SVG Divider -->
+            <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
+                <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,5 150,0 Q 155,5 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,25 150,30 Q 155,25 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
+                <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+            </svg>
+
+            <div class="grid-container">
+                <img src="{% static 'guests/2.jpg' %}" class="grid-item" alt="Gallery Image 1" onclick="openLightbox(0)">
+                <img src="{% static 'guests/3.jpg' %}" class="grid-item" alt="Gallery Image 2" onclick="openLightbox(1)">
+                <img src="{% static 'guests/4.jpg' %}" class="grid-item" alt="Gallery Image 3" onclick="openLightbox(2)">
+                <img src="{% static 'guests/5.jpg' %}" class="grid-item" alt="Gallery Image 4" onclick="openLightbox(3)">
+                <img src="{% static 'guests/6.jpg' %}" class="grid-item" alt="Gallery Image 5" onclick="openLightbox(4)">
+                <img src="{% static 'guests/7.jpg' %}" class="grid-item" alt="Gallery Image 6" onclick="openLightbox(5)">
+            </div>
+        </section>
+
+        <!-- LIGHTBOX / IMAGE VIEWER OVERLAY -->
+        <div class="lightbox-overlay" id="lightbox" onclick="closeLightboxOnBackdrop(event)">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <span class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1, event)">&#10094;</span>
+            <img id="lightbox-img" src="" alt="Gallery preview">
+            <span class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1, event)">&#10095;</span>
+        </div>
+
+        <!-- TIMELINE SECTION -->
+        <section id="timeline">
+            <h2>Wedding Timeline</h2>
+            <!-- Updated Elongated SVG Divider -->
+            <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
+                <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,5 150,0 Q 155,5 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,25 150,30 Q 155,25 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
+                <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+            </svg>
+
+            <div class="timeline-container">
+                <div class="timeline-event">
+                    <div class="timeline-icon">⛪</div>
+                    <div class="timeline-time">02:00 PM</div>
+                    <div class="timeline-title">Ceremony</div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-icon">🥂</div>
+                    <div class="timeline-time">05:00 PM</div>
+                    <div class="timeline-title">Cocktail Hour</div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-icon">🍽️</div>
+                    <div class="timeline-time">06:00 PM</div>
+                    <div class="timeline-title">Reception</div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- DRESS CODE SECTION -->
+    <section id="dress-code">
+        <h2>Dress Code</h2>
+        
+        <!-- Updated Elongated SVG Divider -->
+        <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
+            <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+            <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
+            <path d="M 150,15 Q 145,5 150,0 Q 155,5 150,15 Z" fill="#C0C0C0"/>
+            <path d="M 150,15 Q 145,25 150,30 Q 155,25 150,15 Z" fill="#C0C0C0"/>
+            <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
+            <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+        </svg>
+
+        <p class="dress-code-text">Formal Attire</p>
+        <p class="dress-code-sub">We kindly request our guests to wear shades of Royal Blue and Silver.</p>
+        <p class="dress-code-sub">a) Color Motif: Silver, Navy Blue, Royal Blue</p>
+        <p class="dress-code-sub">b) OR wear your most comfortable formal attire with any color</p>
+        
+        <div class="color-palette">
+            <div class="color-swatch color-dark-blue" title="Navy Blue"></div>
+            <div class="color-swatch color-royal-blue" title="Royal Blue"></div>
+            <div class="color-swatch color-silver" title="Silver"></div>
+            <div class="color-swatch color-light-silver" title="Light Silver"></div>
+        </div>
+    </section>
+
+    <div class="content-wrapper">
+
+        <!-- VENUE SECTION -->
+        <section id="venue">
+            <h2>Church Venue</h2>
+            
+            <!-- Updated Elongated SVG Divider -->
+            <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
+                <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,5 150,0 Q 155,5 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,25 150,30 Q 155,25 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
+                <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+            </svg>
+
+            <!-- CHURCH VENUE BLOCK -->
+            <div class="venue-block">
+                <img src="{% static 'guests/10.jpg' %}" class="venue-photo" alt="Church Venue" onclick="openSingleImageLightbox(this)">
+                <p class="venue-name">St. John Bosco Parish</p>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61865.25913669857!2d121.03700661343248!3d14.277774914739032!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd7d427fa4d227%3A0xe2c7aa9b8d88b383!2sSt.%20John%20Bosco%20Parish%20%26%20Center%20for%20Young%20Workers!5e0!3m2!1sen!2sph!4v1783157024176!5m2!1sen!2sph" 
+                            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <!-- RECEPTION VENUE BLOCK -->
+            <div class="venue-block">
+                <h2>Reception Venue</h2>
+                <!-- Updated Elongated SVG Divider -->
+                <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                    <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
+                    <path d="M 150,15 Q 145,5 150,0 Q 155,5 150,15 Z" fill="#C0C0C0"/>
+                    <path d="M 150,15 Q 145,25 150,30 Q 155,25 150,15 Z" fill="#C0C0C0"/>
+                    <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
+                    <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                </svg>
+                <img src="{% static 'guests/9.jpg' %}" class="venue-photo" alt="Reception Venue" onclick="openSingleImageLightbox(this)">
+                <p class="venue-name">SEDA Hotel</p>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3867.2519209223947!2d121.05692127509919!3d14.238521186206004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd7d3cdeb45e21%3A0x7906b3093b24ff01!2sSeda%20Nuvali!5e0!3m2!1sen!2sph!4v1783303283785!5m2!1sen!2sph"
+                            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact">
+            <h2>Contact</h2>
+            <!-- Updated Elongated SVG Divider -->
+            <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
+                <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+                <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,5 150,0 Q 155,5 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 150,15 Q 145,25 150,30 Q 155,25 150,15 Z" fill="#C0C0C0"/>
+                <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
+                <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
+            </svg>
+            <p class="contact-text">Kindly contact this number for confirmation of attending or not.</p>
+            <p class="contact-number">0915-910-7110</p>
+        </section>
+
+    </div>
+
+    <script>
+        setTimeout(function(){
+            var msg = document.getElementById("msg");
+            if(msg) { msg.style.display = "none"; }
+        }, 5000);
+
+        // LIGHTBOX GALLERY VIEWER
+        var galleryImages = Array.prototype.map.call(
+            document.querySelectorAll('.grid-container .grid-item'),
+            function(img) { return img.src; }
+        );
+        var currentLightboxIndex = 0;
+        var lightbox = document.getElementById('lightbox');
+        var lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            lightboxImg.src = galleryImages[index];
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.querySelector('.lightbox-prev').style.display = 'flex';
+            document.querySelector('.lightbox-next').style.display = 'flex';
+        }
+
+        // Modified Function to handle any single image click (Story & Venues)
+        function openSingleImageLightbox(element) {
+            lightboxImg.src = element.src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Hide navigation arrows since there's only one image being viewed
+            document.querySelector('.lightbox-prev').style.display = 'none';
+            document.querySelector('.lightbox-next').style.display = 'none';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeLightboxOnBackdrop(event) {
+            if (event.target === lightbox) {
+                closeLightbox();
+            }
+        }
+
+        function changeLightboxImage(direction, event) {
+            event.stopPropagation();
+            currentLightboxIndex = (currentLightboxIndex + direction + galleryImages.length) % galleryImages.length;
+            lightboxImg.src = galleryImages[currentLightboxIndex];
+        }
+
+        // Keyboard navigation (desktop)
+        document.addEventListener('keydown', function(e) {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight' && document.querySelector('.lightbox-next').style.display !== 'none') changeLightboxImage(1, e);
+            if (e.key === 'ArrowLeft' && document.querySelector('.lightbox-prev').style.display !== 'none') changeLightboxImage(-1, e);
+        });
+
+        // Swipe navigation (mobile/touch)
+        var touchStartX = 0;
+        lightbox.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        lightbox.addEventListener('touchend', function(e) {
+            if(document.querySelector('.lightbox-next').style.display === 'none') return; // Disable swipe on single images
+            var touchEndX = e.changedTouches[0].screenX;
+            var diff = touchEndX - touchStartX;
+            if (Math.abs(diff) > 50) {
+                if (diff < 0) { changeLightboxImage(1, e); }
+                else { changeLightboxImage(-1, e); }
+            }
+        });
+    </script>
+</body>
+</html>
