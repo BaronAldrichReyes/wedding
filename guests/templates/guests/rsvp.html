@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wedding of Mom & Dad</title>
-    <!-- Bolder font weights loaded -->
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     
     <style>
@@ -35,9 +34,10 @@
             color: #002366; 
         }
         
-        /* ORNAMENTAL HEADING DIVIDER (Lines extended natively in SVG) */
+        /* ORNAMENTAL HEADING DIVIDER (Safeguarded for mobile resizing) */
         .ornament-divider {
             width: 340px; 
+            max-width: 100%;
             height: auto;
             max-height: 30px;
             display: block;
@@ -75,7 +75,7 @@
 
         .hero-content-box h1 { 
             font-family: 'Alex Brush', cursive; 
-            font-size: clamp(4.5rem, 8vw, 7.5rem); 
+            font-size: clamp(3rem, 8vw, 7.5rem); 
             color: #e0e0e0; 
             font-weight: normal;
             margin: 0 0 15px 0; 
@@ -119,7 +119,7 @@
         #gallery { margin-bottom: 60px; }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -199,11 +199,6 @@
         }
         .lightbox-prev { left: 15px; }
         .lightbox-next { right: 15px; }
-
-        @media (max-width: 600px) {
-            .lightbox-close { top: 10px; right: 10px; width: 38px; height: 38px; font-size: 2rem; }
-            .lightbox-nav { width: 40px; height: 40px; font-size: 2rem; }
-        }
 
         /* 3. TIMELINE SECTION */
         #timeline { margin-bottom: 60px; padding: 40px 0; border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; }
@@ -288,13 +283,14 @@
             text-align: left;
         }
 
+        /* Centered "Our Story" Headings over the divider line */
         .our-story-content h2 {
             color: #FFFFFF;
-            text-align: left;
+            text-align: center;
         }
 
         .our-story-content .ornament-divider {
-            margin: 0 0 25px 0;
+            margin: 0 auto 25px auto;
         }
 
         .our-story-content p {
@@ -303,38 +299,6 @@
             line-height: 1.9;
             color: #E8E8E8;
             margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            #our-story {
-                padding: 60px 20px;
-                margin: 0 15px 60px 15px;
-                max-width: none;
-                
-                /* Tighter Inner Border for Mobile */
-                outline: 1px solid #FFFFFF;
-                outline-offset: -10px;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            }
-            .our-story-inner {
-                flex-direction: column;
-                gap: 30px;
-            }
-            .our-story-image {
-                max-width: 100%;
-            }
-            .our-story-image img {
-                height: 380px;
-            }
-            .our-story-content {
-                text-align: center;
-            }
-            .our-story-content h2 {
-                text-align: center;
-            }
-            .our-story-content .ornament-divider {
-                margin: 0 auto 25px auto;
-            }
         }
 
         /* 4. DRESS CODE SECTION */
@@ -436,7 +400,7 @@
             color: #FFFFFF; 
             padding: 80px 20px;
             text-align: center;
-            margin: 0; /* Removed bottom margin since it extends to edge */
+            margin: 0; 
             width: 100vw;
             position: relative;
             left: 50%;
@@ -457,7 +421,7 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1.05rem;
             font-weight: 600;
-            color: #C0C0C0; /* Adjusted for dark background */
+            color: #C0C0C0; 
             margin-bottom: 15px;
         }
         .contact-number {
@@ -465,10 +429,10 @@
             font-size: 1.6rem;
             font-weight: 700;
             letter-spacing: 1px;
-            color: #FFFFFF; /* Adjusted for dark background */
+            color: #FFFFFF; 
         }
 
-        /* MOBILE FIXES */
+        /* MOBILE FIXES & STRUCTURAL SAFETY OVERRIDES */
         @media (max-width: 768px) {
             .hero-content-box { padding: 40px 20px; border-width: 1px; }
             .timeline-container { flex-direction: column; gap: 30px; }
@@ -476,6 +440,39 @@
             .floral-left { left: -10px; }
             .floral-right { right: -10px; }
             .floral-banner { width: 90%; margin: 40px auto; }
+
+            /* Flatten the view breakout properties that break container widths on phones */
+            #dress-code, #contact {
+                width: 100% !important;
+                position: static !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                left: auto !important;
+                right: auto !important;
+            }
+
+            #our-story {
+                padding: 60px 20px;
+                margin: 0 15px 60px 15px;
+                max-width: none;
+                outline-offset: -10px;
+            }
+            .our-story-inner {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .our-story-image {
+                max-width: 100%;
+            }
+            .our-story-image img {
+                height: 380px;
+            }
+            .our-story-content {
+                text-align: center;
+            }
+            
+            .lightbox-close { top: 10px; right: 10px; width: 38px; height: 38px; font-size: 2rem; }
+            .lightbox-nav { width: 40px; height: 40px; font-size: 2rem; }
         }
     </style>
 </head>
@@ -487,7 +484,6 @@
         {% endfor %}
     {% endif %}
 
-    <!-- HERO SECTION -->
     <section id="hero">
         <div class="hero-content-box">
             <h1>Jonathan & Regina</h1>
@@ -497,7 +493,6 @@
         </div>
     </section>
 
-    <!-- OUR STORY SECTION -->
     <section id="our-story">
         <div class="our-story-inner">
             <div class="our-story-image">
@@ -505,7 +500,6 @@
             </div>
             <div class="our-story-content">
                 <h2>Our Story</h2>
-                <!-- Updated Elongated SVG Divider -->
                 <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
                     <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                     <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -514,7 +508,7 @@
                     <path d="M 165,15 Q 160,10 155,15 Q 160,20 165,15 Z" fill="#C0C0C0"/>
                     <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                 </svg>
-                <p>Our love story is ordinary yet special.  It all started 30 years ago when we met in Baguio. We were both working students at Jollibee,</p>
+                <p>Our love story is ordinary yet special. It all started 30 years ago when we met in Baguio. We were both working students at Jollibee,</p>
                 <p>and who would have thought we would end up as a couple.</p>
                 <p>And now, we are celebrating our silver wedding anniversary, and we are excited to share this milestone with you! </p>
             </div>
@@ -523,10 +517,8 @@
 
     <div class="content-wrapper">
         
-        <!-- GALLERY SECTION -->
         <section id="gallery">
             <h2>Gallery</h2>
-            <!-- Updated Elongated SVG Divider -->
             <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
                 <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                 <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -546,18 +538,15 @@
             </div>
         </section>
 
-        <!-- LIGHTBOX / IMAGE VIEWER OVERLAY -->
         <div class="lightbox-overlay" id="lightbox" onclick="closeLightboxOnBackdrop(event)">
-            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-            <span class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1, event)">&#10094;</span>
+            <span class="lightbox-close" onclick="closeLightbox()">×</span>
+            <span class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1, event)">❮</span>
             <img id="lightbox-img" src="" alt="Gallery preview">
-            <span class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1, event)">&#10095;</span>
+            <span class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1, event)">❯</span>
         </div>
 
-        <!-- TIMELINE SECTION -->
         <section id="timeline">
             <h2>Wedding Timeline</h2>
-            <!-- Updated Elongated SVG Divider -->
             <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
                 <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                 <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -588,11 +577,8 @@
 
     </div>
 
-    <!-- DRESS CODE SECTION -->
     <section id="dress-code">
         <h2>Dress Code</h2>
-        
-        <!-- Updated Elongated SVG Divider -->
         <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
             <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
             <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -603,10 +589,9 @@
         </svg>
 
         <p class="dress-code-text">Formal</p>
-        <p class="dress-code-sub">We kindly request our guests to wear their formal attire.</p>
-        <p class="dress-code-sub">a) With shades of Silver-Gray, Royal Blue or Navy Blue.</p>
-        <p class="dress-code-sub">b) Any color that you're comfortable with. </p>
-        
+        <p class="dress-code-sub">Motif: Silver-Grayy, Royal Blue, Navy Blue</p>
+        <p class="dress-code-sub">Guests are encouraged but not required to follow our color motif.</p>
+    
         <div class="color-palette">
             <div class="color-swatch color-dark-blue" title="Navy Blue"></div>
             <div class="color-swatch color-royal-blue" title="Royal Blue"></div>
@@ -617,11 +602,8 @@
 
     <div class="content-wrapper">
 
-        <!-- VENUE SECTION -->
         <section id="venue">
             <h2>Church Venue</h2>
-            
-            <!-- Updated Elongated SVG Divider -->
             <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
                 <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                 <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -631,7 +613,6 @@
                 <line x1="170" y1="15" x2="290" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
             </svg>
 
-            <!-- CHURCH VENUE BLOCK -->
             <div class="venue-block">
                 <img src="{% static 'guests/10.jpg' %}" class="venue-photo" alt="Church Venue" onclick="openSingleImageLightbox(this)">
                 <p class="venue-name">St. John Bosco Parish</p>
@@ -641,10 +622,8 @@
                 </div>
             </div>
 
-            <!-- RECEPTION VENUE BLOCK -->
             <div class="venue-block">
                 <h2>Reception Venue</h2>
-                <!-- Updated Elongated SVG Divider -->
                 <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
                     <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                     <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -663,10 +642,8 @@
             </div>
         </section>
 
-        <!-- CONTACT SECTION -->
         <section id="contact">
             <h2>R S V P</h2>
-            <!-- Updated Elongated SVG Divider -->
             <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
                 <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                 <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -705,12 +682,10 @@
             document.querySelector('.lightbox-next').style.display = 'flex';
         }
 
-        // Modified Function to handle any single image click (Story & Venues)
         function openSingleImageLightbox(element) {
             lightboxImg.src = element.src;
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
-            // Hide navigation arrows since there's only one image being viewed
             document.querySelector('.lightbox-prev').style.display = 'none';
             document.querySelector('.lightbox-next').style.display = 'none';
         }
@@ -732,7 +707,6 @@
             lightboxImg.src = galleryImages[currentLightboxIndex];
         }
 
-        // Keyboard navigation (desktop)
         document.addEventListener('keydown', function(e) {
             if (!lightbox.classList.contains('active')) return;
             if (e.key === 'Escape') closeLightbox();
@@ -740,13 +714,12 @@
             if (e.key === 'ArrowLeft' && document.querySelector('.lightbox-prev').style.display !== 'none') changeLightboxImage(-1, e);
         });
 
-        // Swipe navigation (mobile/touch)
         var touchStartX = 0;
         lightbox.addEventListener('touchstart', function(e) {
             touchStartX = e.changedTouches[0].screenX;
         });
         lightbox.addEventListener('touchend', function(e) {
-            if(document.querySelector('.lightbox-next').style.display === 'none') return; // Disable swipe on single images
+            if(document.querySelector('.lightbox-next').style.display === 'none') return;
             var touchEndX = e.changedTouches[0].screenX;
             var diff = touchEndX - touchStartX;
             if (Math.abs(diff) > 50) {
