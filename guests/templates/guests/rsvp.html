@@ -327,6 +327,12 @@
             }
             .our-story-content {
                 text-align: center;
+                /* Added padding to keep text comfortably inside the inner border on mobile */
+                padding: 0 20px; 
+            }
+            .our-story-content p {
+                /* Slightly smaller font size on mobile to prevent overlapping */
+                font-size: 1rem; 
             }
             .our-story-content h2 {
                 text-align: center;
@@ -386,7 +392,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             border: 1px solid #FFFFFF;
         }
-        .color-dark-blue { background-color: #001133; }
+        .color-navy-blue { background-color: ##000080; }
         .color-royal-blue { background-color: #002366; }
         .color-silver { background-color: #C0C0C0; }
         .color-gray { background-color: #808080; }
@@ -494,7 +500,7 @@
     <section id="hero">
         <div class="hero-content-box">
             <h1>Jon & Regz</h1>
-            <p class="subtitle">... are getting married again !</p>
+            <p class="subtitle">Silver Wedding Anniversary</p>
             <hr class="divider">
             <p class="date">Saturday, September 12th, 2026 | 2 PM</p>
         </div>
@@ -509,7 +515,6 @@
                 </picture>
             </div>
             <div class="our-story-content">
-                <h2>Our Story</h2>
                 <svg class="ornament-divider" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg">
                     <line x1="10" y1="15" x2="130" y2="15" stroke="#C0C0C0" stroke-width="1.5"/>
                     <path d="M 135,15 Q 140,10 145,15 Q 140,20 135,15 Z" fill="#C0C0C0"/>
@@ -604,7 +609,7 @@
         <p class="dress-code-sub">Guests are encouraged but not required to follow our color motif. </p>
         
         <div class="color-palette">
-            <div class="color-swatch color-dark-blue" title="Navy Blue"></div>
+            <div class="color-swatch color-navy-blue" title="Navy Blue"></div>
             <div class="color-swatch color-royal-blue" title="Royal Blue"></div>
             <div class="color-swatch color-silver" title="Silver"></div>
             <div class="color-swatch color-gray" title="Gray"></div>
@@ -666,6 +671,8 @@
             </svg>
             <p class="contact-text">on or before July 20, 2026.</p>
             <p class="contact-number">0915-910-7110</p>
+            <p class="contact-text">A note on gift, your presence is the greatest gift. However, if u wish to honor our union, a monetary gift would be deeply appreciated.</p>
+            <p class="contact-text">Above all, we look forward to celebrating this milestone with you!</p>
         </section>
 
     </div>
