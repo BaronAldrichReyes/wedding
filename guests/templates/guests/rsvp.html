@@ -327,6 +327,12 @@
             }
             .our-story-content {
                 text-align: center;
+                /* Added padding to keep text comfortably inside the inner border on mobile */
+                padding: 0 20px; 
+            }
+            .our-story-content p {
+                /* Slightly smaller font size on mobile to prevent overlapping */
+                font-size: 1rem; 
             }
             .our-story-content h2 {
                 text-align: center;
@@ -386,7 +392,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             border: 1px solid #FFFFFF;
         }
-        .color-dark-blue { background-color: #001133; }
+        .color-navy-blue { background-color: ##000080; }
         .color-royal-blue { background-color: #002366; }
         .color-silver { background-color: #C0C0C0; }
         .color-gray { background-color: #808080; }
@@ -604,7 +610,7 @@
         <p class="dress-code-sub">Guests are encouraged but not required to follow our color motif. </p>
         
         <div class="color-palette">
-            <div class="color-swatch color-dark-blue" title="Navy Blue"></div>
+            <div class="color-swatch color-navy-blue" title="Navy Blue"></div>
             <div class="color-swatch color-royal-blue" title="Royal Blue"></div>
             <div class="color-swatch color-silver" title="Silver"></div>
             <div class="color-swatch color-gray" title="Gray"></div>
