@@ -11,4 +11,5 @@ urlpatterns = [
     path('', invitation_views.home, name='wedding_home'),
     path('rsvp/submit/', guest_views.rsvp_page, name='rsvp_submit'),
     path('find-seat/', views.find_seat, name='find_seat'),
+    
 ]
