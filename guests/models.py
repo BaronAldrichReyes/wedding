@@ -7,7 +7,7 @@ class Guest(models.Model):
     is_attending = models.BooleanField(default=False, verbose_name="Attending?")
     number_of_guests = models.IntegerField(default=1, verbose_name="Total in Party")
     dietary_restrictions = models.TextField(blank=True, null=True)
-    table_number = models.IntegerField()
+    table_number = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
