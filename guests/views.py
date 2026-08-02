@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages  # <-- Imports the pop-up tool
 from .forms import RSVPForm
+from django.db.models import Q
+from .models import Guest
 
 def rsvp_page(request):
     if request.method == 'POST':
@@ -17,3 +19,15 @@ def rsvp_page(request):
     
     return render(request, 'guests/rsvp.html', {'form': RSVPForm()})
 
+def find_seat(request):
+    query = request.GET.get('name')
+    
+    if query:
+        guest = Guest.objects.filter(
+            Q(first_name__icontains=query) | 
+            Q(last_name__icontains=query)
+        ).first()
+        
+        return render(request, 'guest/seat_result.html', {'guest': guest, 'query': query})
+
+    return render(request, 'guest/search_form.html')
