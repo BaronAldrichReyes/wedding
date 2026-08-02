@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from . import views
+from guests import views
 
 # Import the views from both apps with clear, distinct nicknames
 from invitations import views as invitation_views
