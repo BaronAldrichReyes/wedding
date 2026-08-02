@@ -1,6 +1,30 @@
-{% if guest %}
-    <h2>Welcome, {{ guest.first_name }}!</h2>
-    <p>You are seated at Table {{ guest.table_number }}</p>
-{% else %}
-    <p>Sorry, we couldn't find a seat for "{{ query }}".</p>
-{% endif %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Your Seat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+        <h2>Find Your Table</h2>
+        
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'find_seat' %}">
+            <input type="text" name="name" placeholder="Enter your name..." value="{{ query|default:'' }}" required style="padding: 10px; font-size: 16px; width: 250px;">
+            <button type="submit" style="padding: 10px 20px; font-size: 16px;">Search</button>
+        </form>
+
+        <br><hr style="width: 50%; margin: 20px auto;"><br>
+
+        <!-- Results Display -->
+        {% if query %}
+            {% if guest %}
+                <h3 style="color: green;">Welcome, {{ guest.name }}!</h3>
+                <p style="font-size: 20px;">You are seated at <strong>Table {{ guest.table_number }}</strong></p>
+            {% else %}
+                <p style="color: red;">Sorry, we couldn't find a seat for "{{ query }}". Please check the spelling or ask an usher.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
