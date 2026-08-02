@@ -26,4 +26,4 @@ def find_seat(request):
         guest = Guest.objects.filter(Q(name__icontains=query)).first()
         return render(request, 'guests/seat_result.html', {'guest': guest, 'query': query})
 
-    return render(request, 'guests/search_form.html')
+    return render(request, 'guests/seat_result.html')
