@@ -19,7 +19,7 @@
         <!-- Results Display -->
         {% if query %}
             {% if guest %}
-                <h3 style="color: green;">Welcome, {{ guest.name }}!</h3>
+                <h3 style="color: green;">Welcome, {{ guest.first_name }} {{ guest.last_name }}!</h3>
                 <p style="font-size: 20px;">You are seated at <strong>Table {{ guest.table_number }}</strong></p>
             {% else %}
                 <p style="color: red;">Sorry, we couldn't find a seat for "{{ query }}". Please check the spelling or ask an usher.</p>
