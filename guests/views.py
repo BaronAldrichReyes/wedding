@@ -30,13 +30,15 @@ def find_seat(request):
         
         if len(words) == 1:
             word = words[0]
-            guests = guests.filter(first_name__istartswith=word)
+            # Matches if EITHER the first name OR the last name STARTS WITH the typed letters
+            guests = guests.filter(
+                Q(first_name__istartswith=word) | Q(last_name__istartswith=word)
+            )
         else:
             first_word = words[0]
             last_word = words[1]
             guests = guests.filter(
-                first_name__istartswith=first_word,
-                last_name__istartswith=last_word
+                Q(first_name__istartswith=first_word) & Q(last_name__istartswith=last_word)
             )
         
         return render(request, 'guests/seat_result.html', {'guests': guests, 'query': query})
