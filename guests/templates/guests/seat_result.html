@@ -8,23 +8,56 @@
     <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
         <h2>Find Your Table</h2>
         
-        <!-- Search Form -->
-        <form method="GET" action="{% url 'find_seat' %}">
-            <input type="text" name="name" placeholder="Enter your name..." value="{{ query|default:'' }}" required style="padding: 10px; font-size: 16px; width: 250px;">
-            <button type="submit" style="padding: 10px 20px; font-size: 16px;">Search</button>
+    
+        <form onsubmit="return false;">
+            <input type="text" id="searchInput" name="name" placeholder="Type your name..." autocomplete="off" style="padding: 10px; font-size: 16px; width: 250px;">
         </form>
 
         <br><hr style="width: 50%; margin: 20px auto;"><br>
 
-        <!-- Results Display -->
-        {% if query %}
-            {% if guest %}
-                <h3 style="color: green;">Welcome, {{ guest.first_name }} {{ guest.last_name }}!</h3>
-                <p style="font-size: 20px;">You are seated at <strong>Table {{ guest.table_number }}</strong></p>
-            {% else %}
-                <p style="color: red;">Sorry, we couldn't find a seat for "{{ query }}". Please check the spelling or ask an usher.</p>
+       
+        <div id="resultsArea">
+            {% if query %}
+                {% if guest %}
+                    <h3 style="color: green;">Welcome, {{ guest.first_name }} {{ guest.last_name }}!</h3>
+                    <p style="font-size: 20px;">You are seated at <strong>Table {{ guest.table_number }}</strong></p>
+                {% else %}
+                    <p style="color: red;">Sorry, we couldn't find a seat for "{{ query }}".</p>
+                {% endif %}
             {% endif %}
-        {% endif %}
+        </div>
     </div>
+
+   
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const resultsArea = document.getElementById('resultsArea');
+        let typingTimer;                
+        const waitTime = 400; 
+
+        searchInput.addEventListener('input', () => {
+            clearTimeout(typingTimer);
+            const query = searchInput.value.trim();
+
+           
+            if (query.length === 0) {
+                resultsArea.innerHTML = "";
+                return;
+            }
+
+           
+            typingTimer = setTimeout(() => {
+             
+                fetch(`{% url 'find_seat' %}?name=${encodeURIComponent(query)}`)
+                    .then(response => response.text())
+                    .then(html => {
+                     
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        resultsArea.innerHTML = doc.getElementById('resultsArea').innerHTML;
+                    });
+            }, waitTime);
+        });
+    </script>
 </body>
 </html>
