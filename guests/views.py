@@ -23,11 +23,20 @@ def find_seat(request):
     query = request.GET.get('name')
     
     if query:
-        words = query.split()
+        clean_query = query.strip()
+        words = clean_query.split()
+        
         guests = Guest.objects.all()
-        for word in words:
+        
+        if len(words) == 1:
+            word = words[0]
+            guests = guests.filter(first_name__istartswith=word)
+        else:
+            first_word = words[0]
+            last_word = words[1]
             guests = guests.filter(
-                Q(first_name__icontains=word) | Q(last_name__icontains=word)
+                first_name__istartswith=first_word,
+                last_name__istartswith=last_word
             )
         
         return render(request, 'guests/seat_result.html', {'guests': guests, 'query': query})
