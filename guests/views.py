@@ -25,13 +25,13 @@ def find_seat(request):
     query = request.GET.get('name')
     
     if query:
-        
+        # Split whatever they type into separate words
         words = query.split()
         
-      
+        # Start with all guests
         guests = Guest.objects.all()
         
-       
+        # Filter down the list for every word they typed
         for word in words:
             guests = guests.filter(
                 Q(first_name__icontains=word) | Q(last_name__icontains=word)
