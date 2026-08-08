@@ -1,34 +1,118 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Find Your Seat</title>
+    <title>Find Your Table - Jon & Regz Silver Wedding</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #0d1b2a; /* Deep Navy Blue */
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .wedding-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #cbd5e1; /* Elegant Silver */
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .wedding-subtitle {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #94a3b8; /* Muted Silver/Gray */
+            margin-top: 6px;
+        }
+        .card {
+            background-color: #1b263b; /* Lighter Navy Card Background */
+            border: 1px solid #415a77; /* Subtle Silver-Blue Border */
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h2 {
+            color: #f8fafc;
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 1.5rem;
+        }
+        input[type="text"] {
+            padding: 12px 16px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #415a77;
+            border-radius: 8px;
+            background-color: #0d1b2a;
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]::placeholder {
+            color: #64748b;
+        }
+        input[type="text"]:focus {
+            border-color: #cbd5e1;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #415a77;
+            margin: 25px 0;
+        }
+        .guest-result-box {
+            background-color: #0d1b2a;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #415a77;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
-    <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+
+    <!-- Wedding Header -->
+    <div class="header-container">
+        <h1 class="wedding-title">Jon & Regz</h1>
+        <div class="wedding-subtitle">Silver Wedding Anniversary</div>
+    </div>
+
+    <!-- Search Card Container -->
+    <div class="card">
         <h2>Find Your Table</h2>
         
         <form onsubmit="return false;">
-            <input type="text" id="searchInput" name="name" placeholder="Type your name..." autocomplete="off" style="padding: 10px; font-size: 16px; width: 250px;">
+            <input type="text" id="searchInput" name="name" placeholder="Type first or last name..." autocomplete="off">
         </form>
 
-        <br><hr style="width: 50%; margin: 20px auto;"><br>
+        <hr>
 
         <div id="resultsArea">
             {% if query %}
-                <!-- FIXED: Changed 'guest' to 'guests' to match your views.py -->
                 {% if guests %}
-                    
-                    <!-- Loop through the guests and display their table -->
                     {% for guest in guests %}
-                        <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; width: 300px; margin-left: auto; margin-right: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <h3 style="color: green; margin-bottom: 5px; margin-top: 5px;">{{ guest.first_name }} {{ guest.last_name }}</h3>
-                            <p style="font-size: 18px; margin-top: 0;">Table <strong>{{ guest.table_number }}</strong></p>
+                        <div class="guest-result-box">
+                            <h3 style="color: #cbd5e1; margin-bottom: 5px; margin-top: 5px;">{{ guest.first_name }} {{ guest.last_name }}</h3>
+                            <p style="font-size: 18px; margin-top: 0; color: #94a3b8;">Table <strong style="color: #ffffff;">{{ guest.table_number }}</strong></p>
                         </div>
                     {% endfor %}
-                    
                 {% else %}
-                    <p style="color: red;">Sorry, we couldn't find a seat for "{{ query }}".</p>
+                    <p style="color: #f87171;">Sorry, we couldn't find a seat for "{{ query }}".</p>
                 {% endif %}
             {% endif %}
         </div>
@@ -50,7 +134,6 @@
             }
 
             typingTimer = setTimeout(() => {
-                // ADDED { cache: 'no-store' } to force fresh data every time
                 fetch(`{% url 'find_seat' %}?name=${encodeURIComponent(query)}`, { cache: 'no-store' })
                     .then(response => response.text())
                     .then(html => {
