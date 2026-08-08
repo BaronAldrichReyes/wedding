@@ -27,10 +27,13 @@ def find_seat(request):
     if query:
         clean_query = query.strip()
 
-        guest = Guest.objects.annotate(
+        guests = Guest.objects.annotate(
             full_name=Concat('first_name', Value(' '), 'last_name')
-        ).filter(full_name__icontains=clean_query).first()
+        ).filter(
+            Q(full_name__istartswith=clean_query) | 
+            Q(last_name__istartswith=clean_query)
+        )
         
-        return render(request, 'guests/seat_result.html', {'guest': guest, 'query': query})
+        return render(request, 'guests/seat_result.html', {'guests': guests, 'query': query})
         
     return render(request, 'guests/seat_result.html')
