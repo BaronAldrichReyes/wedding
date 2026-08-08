@@ -25,22 +25,18 @@ def find_seat(request):
     query = request.GET.get('name')
     
     if query:
-        clean_query = query.strip()
-        parts = clean_query.split()
         
-        if len(parts) == 1:
-            word = parts[0]
-            guests = Guest.objects.filter(
-                Q(first_name__istartswith=word) | Q(last_name__istartswith=word)
-            )
-        else:
-            first_part = parts[0]
-            last_part = parts[1]
-            guests = Guest.objects.filter(
-                Q(first_name__istartswith=first_part) & Q(last_name__istartswith=last_part)
+        words = query.split()
+        
+      
+        guests = Guest.objects.all()
+        
+       
+        for word in words:
+            guests = guests.filter(
+                Q(first_name__icontains=word) | Q(last_name__icontains=word)
             )
         
-        # This line must be aligned with `if len(parts) == 1:`
         return render(request, 'guests/seat_result.html', {'guests': guests, 'query': query})
         
     return render(request, 'guests/seat_result.html')
