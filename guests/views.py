@@ -15,8 +15,6 @@ def rsvp_page(request):
                 messages.success(request, f"Thank you, {guest.first_name}! See you there! 🎉")
             else:
                 messages.info(request, f"Thank you, {guest.first_name}. We'll miss you!")
-            
-            # Instead of redirect, we re-render the page with an empty form
             return render(request, 'guests/rsvp.html', {'form': RSVPForm()})
     
     return render(request, 'guests/rsvp.html', {'form': RSVPForm()})
@@ -25,13 +23,8 @@ def find_seat(request):
     query = request.GET.get('name')
     
     if query:
-        # Split whatever they type into separate words
         words = query.split()
-        
-        # Start with all guests
         guests = Guest.objects.all()
-        
-        # Filter down the list for every word they typed
         for word in words:
             guests = guests.filter(
                 Q(first_name__icontains=word) | Q(last_name__icontains=word)
