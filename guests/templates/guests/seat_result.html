@@ -3,6 +3,12 @@
 <head>
     <title>Find Your Table - Jon & Regz Silver Wedding</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Import the Great Vibes font for the fancy cursive -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
     <style>
         body {
             background-color: #0d1b2a; /* Deep Navy Blue */
@@ -20,18 +26,26 @@
             margin-bottom: 30px;
         }
         .wedding-title {
-            font-size: 2.5rem;
-            font-weight: 300;
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem; /* Much larger for the cursive font */
+            font-weight: normal;
             color: #cbd5e1; /* Elegant Silver */
-            letter-spacing: 2px;
             margin: 0;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Subtle drop shadow */
         }
         .wedding-subtitle {
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 4px;
             color: #94a3b8; /* Muted Silver/Gray */
-            margin-top: 6px;
+            margin-top: 5px;
+        }
+        .wedding-date {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 10px;
+            font-style: italic;
         }
         .card {
             background-color: #1b263b; /* Lighter Navy Card Background */
@@ -50,8 +64,23 @@
             font-weight: 400;
             font-size: 1.5rem;
         }
+        
+        /* Search Box Styling */
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: #64748b;
+        }
         input[type="text"] {
-            padding: 12px 16px;
+            padding: 12px 35px 12px 40px; /* Space for both icons */
             font-size: 16px;
             width: 100%;
             box-sizing: border-box;
@@ -68,6 +97,29 @@
         input[type="text"]:focus {
             border-color: #cbd5e1;
         }
+        .clear-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            display: none; /* Hidden until typing starts */
+            padding: 0 5px;
+        }
+        .clear-btn:hover {
+            color: #cbd5e1;
+        }
+        .help-text {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 8px;
+            display: block;
+        }
+
         hr {
             border: 0;
             height: 1px;
@@ -90,6 +142,8 @@
     <div class="header-container">
         <h1 class="wedding-title">Jon & Regz</h1>
         <div class="wedding-subtitle">Silver Wedding Anniversary</div>
+        <!-- You can edit or remove this date if needed -->
+        <div class="wedding-date">August 8, 2026</div>
     </div>
 
     <!-- Search Card Container -->
@@ -97,7 +151,18 @@
         <h2>Find Your Table</h2>
         
         <form onsubmit="return false;">
-            <input type="text" id="searchInput" name="name" placeholder="Type first or last name..." autocomplete="off">
+            <div class="input-wrapper">
+                <!-- SVG Magnifying Glass -->
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+                </svg>
+                
+                <input type="text" id="searchInput" name="name" placeholder="Type first or last name..." autocomplete="off">
+                
+                <!-- Clear Button -->
+                <button type="button" id="clearBtn" class="clear-btn">&times;</button>
+            </div>
+            <span class="help-text">E.g., Rose or Catbagan</span>
         </form>
 
         <hr>
@@ -121,14 +186,27 @@
     <script>
         const searchInput = document.getElementById('searchInput');
         const resultsArea = document.getElementById('resultsArea');
+        const clearBtn = document.getElementById('clearBtn');
         let typingTimer;                
         const waitTime = 400; 
+
+        // Clear button functionality
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            resultsArea.innerHTML = '';
+            searchInput.focus();
+        });
 
         searchInput.addEventListener('input', () => {
             clearTimeout(typingTimer);
             const query = searchInput.value.trim();
 
-            if (query.length === 0) {
+            // Show/hide clear button
+            if (query.length > 0) {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
                 resultsArea.innerHTML = "";
                 return;
             }
