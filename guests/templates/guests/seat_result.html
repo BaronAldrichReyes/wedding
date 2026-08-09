@@ -120,12 +120,26 @@
             display: block;
         }
 
-        hr {
-            border: 0;
-            height: 1px;
-            background: #415a77;
+        /* Fancy Decorative Divider */
+        .fancy-divider {
+            display: flex;
+            align-items: center;
             margin: 25px 0;
+            width: 100%;
         }
+        .fancy-divider::before,
+        .fancy-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #415a77;
+        }
+        .fancy-divider svg {
+            width: 24px;
+            height: 24px;
+            fill: #94a3b8; /* Silver matching the text */
+            margin: 0 15px;
+        }
+
         .guest-result-box {
             background-color: #0d1b2a;
             margin-bottom: 15px;
@@ -143,7 +157,6 @@
         <h1 class="wedding-title">Jon & Regz</h1>
         <div class="wedding-subtitle">Silver Wedding Anniversary</div>
         <!-- You can edit or remove this date if needed -->
-        <div class="wedding-date">August 8, 2026</div>
     </div>
 
     <!-- Search Card Container -->
@@ -162,10 +175,19 @@
                 <!-- Clear Button -->
                 <button type="button" id="clearBtn" class="clear-btn">&times;</button>
             </div>
-            <span class="help-text">E.g., Rose or Catbagan</span>
         </form>
 
-        <hr>
+        <!-- The New Fancy Divider -->
+        <div class="fancy-divider">
+            <!-- Inline SVG drawing the 4-petal diamond cross -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polygon points="12,0 14,6 12,10 10,6" />
+                <polygon points="12,14 14,18 12,24 10,18" />
+                <polygon points="0,12 6,10 10,12 6,14" />
+                <polygon points="14,12 18,10 24,12 18,14" />
+                <circle cx="12" cy="12" r="1.5" />
+            </svg>
+        </div>
 
         <div id="resultsArea">
             {% if query %}
